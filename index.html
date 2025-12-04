@@ -45,12 +45,12 @@
             stroke: none;
         }
         
-        /* Mobile optimization for horizontal stacked bar labels */
+        /* Mobile optimization for labels: not strictly necessary for pie charts, but kept for consistency */
         @media (max-width: 640px) {
             .moh-label {
                 width: 100%;
                 text-align: left;
-                margin-bottom: 0.25rem; /* space-y-1 */
+                margin-bottom: 0.25rem;
             }
             .viz-item {
                 flex-direction: column;
@@ -113,24 +113,36 @@
         
         <section class="space-y-6">
             <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-accent pb-2 flex items-center">
-                <span class="mr-2">🏘️</span> Families Displaced Distribution
+                <span class="mr-2">🚻</span> Gender Breakdown
             </h2>
-            <div id="moh-families-visualization" class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+            <div id="gender-distribution" class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
                 </div>
         </section>
 
         <section class="space-y-6">
             <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-secondary pb-2 flex items-center">
-                <span class="mr-2">🚨</span> Vulnerable Population Breakdown
+                <span class="mr-2">🚨</span> Vulnerable Population Distribution by MOH Area
             </h2>
-            <div class="flex flex-wrap gap-4 text-sm font-semibold p-4 bg-white rounded-xl shadow-inner">
-                <div class="flex items-center"><span class="w-3 h-3 rounded-full mr-2 bg-vulnerable-infants"></span> **Infants**</div>
-                <div class="flex items-center"><span class="w-3 h-3 rounded-full mr-2 bg-vulnerable-under5"></span> **Under 5**</div>
-                <div class="flex items-center"><span class="w-3 h-3 rounded-full mr-2 bg-vulnerable-pregnant"></span> **Pregnant Mothers**</div>
-            </div>
             
-            <div id="moh-vulnerable-visualization" class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 space-y-6">
+            <p class="text-gray-600 text-lg font-semibold">Distribution of each vulnerable group across the Medical Officer of Health (MOH) areas.</p>
+
+            <div id="vulnerable-pie-charts" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 text-vulnerable-infants">👶 Infants (< 1 year) Distribution</h3>
+                    <div id="vulnerable-infants-chart"></div>
                 </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 text-vulnerable-under5">🧒 Children Under 5 Distribution</h3>
+                    <div id="vulnerable-under5-chart"></div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 text-vulnerable-pregnant">🤰 Pregnant Mothers Distribution</h3>
+                    <div id="vulnerable-pregnant-chart"></div>
+                </div>
+            </div>
         </section>
 
         <section class="space-y-6">
@@ -218,6 +230,10 @@
             '#6366f1', // Indigo
             '#4b5563' // Gray-600 (for 'Other MOH Areas')
         ];
+        const GENDER_COLORS = {
+            male: '#3b82f6', // Blue for Male
+            female: '#ec4899' // Pink for Female
+        };
         const TOP_N_SLICES = 5;
 
         // 1. Calculate Totals
@@ -237,7 +253,7 @@
 
         // === VISUALIZATION FUNCTIONS ===
 
-        // Helper function for rendering a Pie Chart using SVG
+        // Helper function for rendering a Pie Chart using SVG (Used for MOH Distribution for People, Gender, and now Vulnerable groups)
         const renderPieChart = (containerId, dataKey, chartTitle) => {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
@@ -274,7 +290,7 @@
             // SVG and Labels Container Setup
             const chartArea = document.createElement('div');
             // Use flex-col on mobile and flex-row on desktop for responsive layout
-            chartArea.className = "flex flex-col md:flex-row items-center justify-center p-2 space-y-4 md:space-y-0 md:space-x-12";
+            chartArea.className = "flex flex-col lg:flex-row items-center justify-center p-2 space-y-4 lg:space-y-0 lg:space-x-12";
             
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("width", svgSize);
@@ -283,7 +299,8 @@
             svg.className = "flex-shrink-0 shadow-xl rounded-full border border-gray-200";
 
             const labelContainer = document.createElement('div');
-            labelContainer.className = "flex flex-col space-y-2 text-sm max-w-full md:max-w-sm w-full md:w-auto";
+            // Adjusted container for better display in the 3-column grid
+            labelContainer.className = "flex flex-col space-y-2 text-sm max-w-full w-full lg:w-auto mt-4 lg:mt-0"; 
             
             slices.forEach((slice, index) => {
                 const percentage = (slice.value / totalValue);
@@ -328,7 +345,7 @@
                 
                 // 3. Generate Labels
                 const percentageText = `${(percentage * 100).toFixed(1)}%`;
-                const labelText = `${slice.moh}: ${slice.value.toLocaleString()} (${percentageText})`;
+                const labelText = `${slice.moh}: **${slice.value.toLocaleString()}** (${percentageText})`;
                 const labelHtml = `
                     <div class="flex items-center p-2 rounded-lg transition duration-150 hover:bg-gray-100/50" title="${slice.moh}">
                         <span class="w-4 h-4 rounded-full mr-3 flex-shrink-0 shadow-sm" style="background-color: ${color};"></span>
@@ -347,62 +364,107 @@
             // Add a note about the grouping
             if (otherSlices.length > 0) {
                 const note = document.createElement('p');
-                note.className = "text-center text-xs text-gray-500 mt-4 px-4";
+                note.className = "text-center text-xs text-gray-500 mt-4 px-4 w-full";
                 note.innerHTML = `Note: Smaller areas (constituting ${otherSlices.length} MOHs) are combined into 'Other MOH Areas' for a clearer visual distribution.`;
                 container.appendChild(note);
             }
         };
 
-
-        // Function for rendering the Stacked Bar Chart for Vulnerable Groups (kept horizontal for composition clarity)
-        const renderVulnerableGroupsVisualization = () => {
-            const container = document.getElementById('moh-vulnerable-visualization');
+        // Function for a simple Male vs. Female Pie Chart (from the total population)
+        const renderGenderPieChart = (containerId) => {
+            const container = document.getElementById(containerId);
             container.innerHTML = '';
+            
+            // Prepare data (simplified to just two slices)
+            const data = [
+                { label: "Male Affected", key: 'male', value: totals.male, color: GENDER_COLORS.male, icon: '♂️' },
+                { label: "Female Affected", key: 'female', value: totals.female, color: GENDER_COLORS.female, icon: '♀️' }
+            ].filter(d => d.value > 0);
 
-            const vulnerableData = disasterData.map(d => ({
-                moh: d.moh,
-                infants: d.infants,
-                under5: d.under5,
-                pregnant: d.pregnant,
-                total: d.infants + d.under5 + d.pregnant
-            })).filter(d => d.total > 0)
-               .sort((a, b) => b.total - a.total); // Sort descending
-
-            if (vulnerableData.length === 0) {
-                container.innerHTML = `<p class="text-center text-gray-500">No vulnerable population reported in any area.</p>`;
+            if (data.length === 0) {
+                container.innerHTML = `<p class="text-center w-full text-gray-500">No gender data reported.</p>`;
                 return;
             }
 
-            const maxVulnerable = Math.max(...vulnerableData.map(d => d.total));
+            const totalValue = data.reduce((sum, d) => sum + d.value, 0);
 
-            vulnerableData.forEach(item => {
-                const totalPercentage = (item.total / maxVulnerable) * 100;
+            // SVG and Labels Container Setup
+            const chartArea = document.createElement('div');
+            chartArea.className = "flex flex-col md:flex-row items-center justify-center p-2 space-y-4 md:space-y-0 md:space-x-12";
+            
+            const svgSize = 300;
+            const radius = svgSize / 2 - 10;
+            const center = svgSize / 2;
+            let startAngle = 0;
+
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("width", svgSize);
+            svg.setAttribute("height", svgSize);
+            svg.setAttribute("viewBox", `0 0 ${svgSize} ${svgSize}`);
+            svg.className = "flex-shrink-0 shadow-xl rounded-full border border-gray-200";
+
+            const labelContainer = document.createElement('div');
+            labelContainer.className = "flex flex-col space-y-2 text-base max-w-full md:max-w-sm w-full md:w-auto";
+            
+            data.forEach((slice, index) => {
+                const percentage = (slice.value / totalValue);
+                const angle = percentage * 360;
+                const endAngle = startAngle + angle;
                 
-                const barHtml = `
-                    <div class="viz-item flex flex-col sm:flex-row items-start sm:items-center space-y-1 sm:space-y-0 sm:space-x-4">
-                        <div class="moh-label w-full sm:w-40 text-sm font-semibold text-gray-700 truncate">${item.moh}</div>
-                        <div class="flex-grow w-full sm:w-auto bg-gray-200 rounded-full h-6 relative flex overflow-hidden shadow-inner" title="Total Vulnerable: ${item.total.toLocaleString()}">
-                            <div class="stack-segment ${item.infants > 0 ? 'bg-vulnerable-infants' : 'hidden'}" 
-                                 style="width: ${item.total > 0 ? (item.infants / item.total) * totalPercentage : 0}%;" 
-                                 title="Infants: ${item.infants}">
-                            </div>
-                            <div class="stack-segment ${item.under5 > 0 ? 'bg-vulnerable-under5' : 'hidden'}" 
-                                 style="width: ${item.total > 0 ? (item.under5 / item.total) * totalPercentage : 0}%;"
-                                 title="Under 5: ${item.under5}">
-                            </div>
-                            <div class="stack-segment ${item.pregnant > 0 ? 'bg-vulnerable-pregnant' : 'hidden'}" 
-                                 style="width: ${item.total > 0 ? (item.pregnant / item.total) * totalPercentage : 0}%;"
-                                 title="Pregnant Mothers: ${item.pregnant}">
-                            </div>
-                            <span class="absolute right-2 top-0.5 text-xs font-bold text-gray-800 pointer-events-none">
-                                ${item.total.toLocaleString()}
-                            </span>
-                        </div>
+                // Skip if slice is too small
+                if (angle < 0.5) {
+                    startAngle = endAngle;
+                    return;
+                }
+
+                const getCoords = (angle) => {
+                    const radians = (angle - 90) * (Math.PI / 180);
+                    return [
+                        center + (radius * Math.cos(radians)),
+                        center + (radius * Math.sin(radians))
+                    ];
+                };
+                
+                const [x1, y1] = getCoords(startAngle);
+                const [x2, y2] = getCoords(endAngle);
+
+                const largeArcFlag = angle > 180 ? 1 : 0;
+                
+                // Define the SVG path (slice)
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                path.setAttribute("d", `M ${center},${center} L ${x1},${y1} A ${radius},${radius} 0 ${largeArcFlag},1 ${x2},${y2} Z`);
+                path.setAttribute("fill", slice.color);
+                path.setAttribute("stroke", "white");
+                path.setAttribute("stroke-width", "1");
+                path.setAttribute("title", `${slice.label}: ${slice.value.toLocaleString()} (${(percentage * 100).toFixed(1)}%)`);
+                path.style.transition = 'transform 0.3s';
+                
+                path.addEventListener('mouseenter', () => path.style.transform = 'scale(1.03)');
+                path.addEventListener('mouseleave', () => path.style.transform = 'scale(1)');
+                
+                svg.appendChild(path);
+                
+                // Generate Labels
+                const percentageText = `${(percentage * 100).toFixed(1)}%`;
+                const labelText = `${slice.icon} **${slice.label.replace(' Affected', '')}:** ${slice.value.toLocaleString()} (${percentageText})`;
+                const labelHtml = `
+                    <div class="flex items-center p-2 rounded-lg transition duration-150 hover:bg-gray-100/50" title="${slice.label}">
+                        <span class="w-4 h-4 rounded-full mr-3 flex-shrink-0 shadow-sm" style="background-color: ${slice.color};"></span>
+                        <span class="text-gray-800 font-medium">${labelText}</span>
                     </div>
                 `;
-                container.innerHTML += barHtml;
+                labelContainer.innerHTML += labelHtml;
+
+                startAngle = endAngle;
             });
+
+            chartArea.appendChild(svg);
+            chartArea.appendChild(labelContainer);
+            container.appendChild(chartArea);
         };
+        
+        // Removed: renderVulnerableGroupsVisualization function (stacked bar chart is obsolete)
+
 
         // === RENDER ALL ELEMENTS ON LOAD ===
         
@@ -427,17 +489,21 @@
             kpiContainer.innerHTML += card;
         });
 
-        // 3. Render all MOH Visualizations (Now Pie Charts)
+        // 3. Render all MOH Visualizations
         renderPieChart('moh-people-visualization', 'people', 'Affected Population (People)');
-        renderPieChart('moh-families-visualization', 'families', 'Families Displaced');
-        renderVulnerableGroupsVisualization();
+        renderGenderPieChart('gender-distribution'); 
+        
+        // NEW: Render three separate vulnerable group pie charts
+        renderPieChart('vulnerable-infants-chart', 'infants', 'Infants');
+        renderPieChart('vulnerable-under5-chart', 'under5', 'Children Under 5');
+        renderPieChart('vulnerable-pregnant-chart', 'pregnant', 'Pregnant Mothers');
 
 
         // 4. Render Detailed Data Table
         const tableBody = document.getElementById('data-table-body');
         tableBody.innerHTML = ''; // Clear existing content
         disasterData.forEach((item, index) => {
-            const rowClass = index % 2 === 0 ? 'bg-white hover:bg-gray-50' : 'bg-gray-50 hover:bg-gray-100';
+            const rowClass = item.people > 0 ? (index % 2 === 0 ? 'bg-white hover:bg-gray-50' : 'bg-gray-50 hover:bg-gray-100') : 'bg-red-50/50 hover:bg-red-100'; // Highlight zero-population areas slightly
             const rowHtml = `
                 <tr class="${rowClass} transition duration-150 ease-in-out">
                     <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900">${item.moh}</td>
