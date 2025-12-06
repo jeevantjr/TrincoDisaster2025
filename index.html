@@ -101,34 +101,7 @@
                 Data Last Updated: <strong>Loading...</strong>
             </p>
         </div>
- <div class="flex justify-center my-10">
-    <a href="HighRisk.html" 
-       class="
-            bg-red-600 
-            hover:bg-red-700 
-            text-white 
-            font-extrabold 
-            py-5 
-            px-12 
-            text-xl 
-            rounded-full 
-            shadow-2xl 
-            transition 
-            duration-500 
-            flex 
-            items-center 
-            gap-3
-            uppercase
-            tracking-wider
-            hero-pulse-button">
-        
-        <svg class="h-8 w-8 text-yellow-300 animate-bounce" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.305 3.25 1.953 3.25h14.706c1.648 0 2.813-1.75 1.948-3.25L12 2.25 2.997 16.126zM12 15.75h.007v.008H12v-.008z" />
-        </svg>
-        
-        <span class="z-10">View Critical High-Risk Dashboard</span>
-    </a>
-</div>
+
         <!-- Summary Cards Section -->
         <h2 class="text-3xl font-bold mb-6 text-accent-primary border-b-2 border-accent-primary/50 pb-2 flex items-center">
             <i lucide="layout-dashboard" class="w-6 h-6 mr-3 text-accent-primary"></i>
@@ -175,132 +148,69 @@
                 </table>
             </div>
         </div>
-<!-- Public Health Situation Summary - Card Box -->
-<div class="bg-card-bg p-6 rounded-xl shadow-custom border border-gray-100 mt-10">
-    <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
-        <i lucide="alert-octagon" class="w-7 h-7 mr-3 text-red-600"></i>
-        Public Health Situation Summary
-    </h2>
+<table class="min-w-full table-auto bg-white rounded-lg shadow-md border border-gray-200">
+    <thead class="bg-gray-100 border-b">
+        <tr>
+            <th class="p-3 text-left font-semibold text-gray-700">Item</th>
+            <th class="p-3 text-left font-semibold text-gray-700">Response</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Are any health facilities damaged?</td>
+            <td class="p-3">No</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">If yes, list affected health facilities and type of damage</td>
+            <td class="p-3">—</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Number of reported AGE cases</td>
+            <td class="p-3">0</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">AGE outbreaks or suspected clusters?</td>
+            <td class="p-3">No</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Details of AGE situation</td>
+            <td class="p-3">0</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Number of suspected dengue cases</td>
+            <td class="p-3">0</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Number of confirmed dengue cases</td>
+            <td class="p-3">0</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Larval surveys conducted?</td>
+            <td class="p-3">Yes</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Vector control activities</td>
+            <td class="p-3">Fogging, Larviciding, Source reduction, Awareness session</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Notes on dengue surveillance</td>
+            <td class="p-3">Yes</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Is leptospirosis prophylaxis being provided?</td>
+            <td class="p-3">Yes</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Number given doxycycline prophylaxis</td>
+            <td class="p-3">9000</td>
+        </tr>
+        <tr>
+            <td class="p-3 font-medium text-gray-800">Any suspected/confirmed leptospirosis cases?</td>
+            <td class="p-3">No</td>
+        </tr>
+    </tbody>
+</table>
 
-    <table class="min-w-full bg-white rounded-lg shadow-md border border-gray-200">
-        <thead class="bg-gray-100 border-b">
-            <tr>
-                <th class="p-3 text-left font-semibold text-gray-700 flex items-center">
-                    <i lucide="file-text" class="w-4 h-4 mr-2 text-rdhs-blue"></i> Item
-                </th>
-                <th class="p-3 text-left font-semibold text-gray-700 flex items-center">
-                    <i lucide="check-circle" class="w-4 h-4 mr-2 text-accent-primary"></i> Response
-                </th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="hospital" class="w-4 h-4 mr-2 text-gray-500"></i>
-                    Are any health facilities damaged?
-                </td>
-                <td class="p-3">No</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="home" class="w-4 h-4 mr-2 text-gray-500"></i>
-                    If yes, list affected health facilities and type of damage
-                </td>
-                <td class="p-3">—</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="activity" class="w-4 h-4 mr-2 text-blue-600"></i>
-                    Number of reported AGE cases
-                </td>
-                <td class="p-3">0</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="alert-triangle" class="w-4 h-4 mr-2 text-orange-500"></i>
-                    AGE outbreaks or suspected clusters?
-                </td>
-                <td class="p-3">No</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="align-left" class="w-4 h-4 mr-2 text-gray-500"></i>
-                    Details of AGE situation
-                </td>
-                <td class="p-3">0</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="droplet" class="w-4 h-4 mr-2 text-red-600"></i>
-                    Number of suspected dengue cases
-                </td>
-                <td class="p-3">0</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="check" class="w-4 h-4 mr-2 text-green-600"></i>
-                    Number of confirmed dengue cases
-                </td>
-                <td class="p-3">0</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="search" class="w-4 h-4 mr-2 text-yellow-600"></i>
-                    Larval surveys conducted?
-                </td>
-                <td class="p-3">Yes</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="shield" class="w-4 h-4 mr-2 text-accent-primary"></i>
-                    Vector control activities
-                </td>
-                <td class="p-3">Fogging, Larviciding, Source reduction, Awareness session</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="clipboard-list" class="w-4 h-4 mr-2 text-blue-500"></i>
-                    Notes on dengue surveillance
-                </td>
-                <td class="p-3">Yes</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="pill" class="w-4 h-4 mr-2 text-green-600"></i>
-                    Is leptospirosis prophylaxis being provided?
-                </td>
-                <td class="p-3">Yes</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="capsule" class="w-4 h-4 mr-2 text-purple-600"></i>
-                    Number given doxycycline prophylaxis
-                </td>
-                <td class="p-3">9000</td>
-            </tr>
-
-            <tr>
-                <td class="p-3 font-medium text-gray-800 flex items-center">
-                    <i lucide="x-circle" class="w-4 h-4 mr-2 text-red-600"></i>
-                    Any suspected/confirmed leptospirosis cases?
-                </td>
-                <td class="p-3">No</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
         <!-- Footer and Contact Info - REDESIGNED WITH CARD BACKGROUND -->
         <footer class="mt-12">
